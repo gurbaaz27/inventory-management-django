@@ -6,7 +6,7 @@ import uuid
 # Create your models here.
 class Customer(models.Model):
     id              = models.AutoField(primary_key=True)
-    name            = models.CharField(max_length=100)
+    name            = models.CharField(max_length=100, unique=True)
     phoneno_regex   = RegexValidator(regex=PHONE_REGEX, message=PHONE_MESSAGE)
     phone           = models.CharField(validators=[phoneno_regex], max_length=17, blank=True)
     address         = models.CharField(max_length=250)
@@ -17,7 +17,7 @@ class Customer(models.Model):
 
 class Item(models.Model):
     id              = models.AutoField(primary_key=True)
-    description     = models.CharField(max_length=250)
+    description     = models.CharField(max_length=250, unique=True)
     price           = models.FloatField()
     quantity        = models.IntegerField()
 

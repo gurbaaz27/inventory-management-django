@@ -64,6 +64,15 @@ http://127.0.0.1:8000/api/items
 http://127.0.0.1:8000/api/customer-purchase/<int:customer-id>
 ```
 
+- apart from this, we have some utility apis
+
+```
+# view/add details of customers with get/post
+http://127.0.0.1:8000/api/customers/ 
+# add details of new items with post
+http://127.0.0.1:8000/api/items/
+```
+
 
 ## models
 

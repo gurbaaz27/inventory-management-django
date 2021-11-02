@@ -14,12 +14,39 @@ from .utils import create_invoice_pdf
 
 class ItemDetails(APIView):
     """
-    Retrieve, update or delete an item.
+    Retrieve items
     """
     def get(self, request, *args, **kwargs):
         items = Item.objects.all()
         serializer = ItemSerializer(items, many=True)
         return Response(status=200, data=serializer.data)
+
+
+    def post(self, request, *args, **kwargs):
+        serializer = ItemSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=200, data=f"Item {serializer.data['description']} successfully added")
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data = serializer.errors)
+            
+
+class CustomerDetails(APIView):
+    """
+    Retrieve customers
+    """
+    def get(self, request, *args, **kwargs):
+        customers = Customer.objects.all()
+        serializer = CustomerSerializer(customers, many=True)
+        return Response(status=200, data=serializer.data)
+
+    def post(self, request, *args, **kwargs):
+        serializer = CustomerSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(status=200, data=f"Customer {serializer.data['name']} successfully added")
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data = serializer.errors)
 
 
 class CustomerPurchase(APIView):
