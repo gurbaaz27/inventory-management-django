@@ -66,19 +66,28 @@ class CustomerPurchase(APIView):
                 invoice = Invoice.objects.create(customer=customer)
 
             for entry in serializer.data:
-                if Item.objects.filter(id=entry["item"]).exists():
-                    item = Item.objects.get(id=entry["item"])
-                else:
-                    return Response(status=status.HTTP_404_NOT_FOUND, data=f"No item found for id {entry['item']}")
-
                 if InvoiceItem.objects.filter(item__id=entry["item"], invoice=invoice).exists():
                     return Response(status=status.HTTP_403_FORBIDDEN, data=f"Item with id {entry['item']} already present in list. Use PUT method to update.")
 
+            for entry in serializer.data:
+                if not Item.objects.filter(id=entry["item"]).exists():
+                    return Response(status=status.HTTP_404_NOT_FOUND, data=f"No item found for id {entry['item']}")
+
+            for entry in serializer.data:
+                item = Item.objects.get(id=entry["item"])                
+
+                if entry["quantity"] > item.quantity:
+                    return Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY, data=f"Item with id {item.id} has insufficient stocks ({item.quantity})")
+            
+            for entry in serializer.data:
+                item = Item.objects.get(id=entry["item"]) 
                 InvoiceItem.objects.create(
                     invoice     = invoice,
                     item        = item,
                     quantity    = entry["quantity"]
                 )
+                item.quantity -= entry["quantity"]
+                item.save()
             return Response(status=status.HTTP_200_OK, data="List of items added to purchase list successfully!")
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data = serializer.errors)
@@ -93,23 +102,32 @@ class CustomerPurchase(APIView):
                 invoice = Invoice.objects.get(customer=customer)
             else:
                 invoice = Invoice.objects.create(customer=customer)
-
+            
             for entry in serializer.data:
-                
                 if not Item.objects.filter(id=entry["item"]).exists():
                     return Response(status=status.HTTP_404_NOT_FOUND, data=f"No item found for id {entry['item']}")
+            
+            for entry in serializer.data:
+                item = Item.objects.get(id=entry["item"])                
 
+                if entry["quantity"] > item.quantity:
+                    return Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY, data=f"Item with id {item.id} has insufficient stocks ({item.quantity})")
+
+            for entry in serializer.data:
+                item = Item.objects.get(id=entry["item"])
                 if InvoiceItem.objects.filter(item__id=entry["item"], invoice=invoice).exists():
                     invoice_item            = InvoiceItem.objects.filter(item__id=entry["item"], invoice=invoice)[0]
                     invoice_item.quantity   = entry["quantity"]
                     invoice_item.save()
+                    item = Item.objects.get(id=entry["item"])       
                 else:
-                    item = Item.objects.get(id=entry["item"])
                     InvoiceItem.objects.create(
                         invoice     = invoice,
-                        item     = item,
+                        item        = item,
                         quantity    = entry["quantity"]
                     )   
+                item.quantity -= entry["quantity"]
+                item.save()
 
             return Response(status=status.HTTP_200_OK, data="List of items updated in purchase list successfully!")
         else:

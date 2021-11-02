@@ -6,6 +6,7 @@
 - [Urls](#urls)
 - [Models](#models)
 - [Assumptions](#assumptions)
+- [Task 2](#task-2)
 
 ## setup
 
@@ -60,7 +61,7 @@ http://127.0.0.1:8000/api/items
 - GET: get the invoice for the purchase in pdf format as per the above format but with all the necessary details filled dynamically
 
 ```
-http://127.0.0.1:8000/api/customer-purchase/<customer-id>
+http://127.0.0.1:8000/api/customer-purchase/<int:customer-id>
 ```
 
 
@@ -74,5 +75,25 @@ http://127.0.0.1:8000/api/customer-purchase/<customer-id>
 
 ## assumptions
 
-- `PUT` method created request for new items and/or update requests of previous items. Items not included in a PUT request, if they exist in Invoice earlier, do not get deleted. 
+- `PUT` method either creates request for new items and/or update requests of previous items. Items not included in a `PUT` request, if they exist in invoice earlier, do not get deleted. 
+- if `POST` method is called for an item that is already in invoice, it would result in error. the task of updation is solely via `PUT` method 
+- if there is error for even one item in `POST` or `PUT` (i.e. due to insufficient stocks, item id does not exist etc), entire request fails
+- each invoice is one-to-one mapped to customer. practically there could be many invoices per customer and it should be many-to-one mapped. but keeping things simple here (as then one would also need to provide some sort of invoice `id` apart from customer `id` while testing) 
 
+
+## task 2
+
+```
+python manage.py generate_stock_list --help
+
+usage: manage.py generate_stock_list [-h] [--version] [-v {0,1,2,3}] [--settings SETTINGS] [--pythonpath PYTHONPATH] [--traceback] [--no-color]
+                                     [--force-color] [--skip-checks]
+
+Auto generate a list of products/items with low stock/expiry from the inventory database.
+```
+
+below command can be scheduled via `cron` to run 12 AM daily on the server side
+
+```
+python manage.py generate_stock_list
+```
