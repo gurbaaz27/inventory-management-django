@@ -7,8 +7,8 @@ from rest_framework import serializers, status
 from django.core.files import File
 from disecto.settings import MEDIA_ROOT
 from django.http import HttpResponse, Http404
-from .models import Item, Customer, Invoice, InvoiceItem
-from .serializers import ItemSerializer, PurchaseSerializer
+from .models import *
+from .serializers import *
 from .utils import create_invoice_pdf
 
 
@@ -37,14 +37,20 @@ class CustomerPurchase(APIView):
         customer = self.get_object(id)
         if Invoice.objects.filter(customer=customer).exists():
             invoice                         = Invoice.objects.get(customer=customer)
-            filename                        = f"{customer.name}-{invoice.timestamp}"
-            path_to_file                    = MEDIA_ROOT + '/' + filename
-            create_invoice_pdf(filename, path_to_file, invoice)
-            f                               = open(path_to_file, 'rb')
-            pdfFile                         = File(f)
-            response                        = HttpResponse(pdfFile.read())
-            response['Content-Disposition'] = f'attachment/pdf; filename={filename}'
-            return response
+
+            if InvoiceItem.objects.filter(invoice=invoice).exists():
+                invoice_items                   = InvoiceItemsSerializer(InvoiceItem.objects.filter(invoice=invoice), many=True)
+                invoice_info                    = InvoiceSerializer(invoice)
+                filename                        = f"{customer.name}-{invoice.timestamp}"
+                path_to_file                    = MEDIA_ROOT + '/' + filename
+                create_invoice_pdf(path_to_file, invoice_info.data, invoice_items.data)
+                f                               = open(path_to_file + '.pdf', 'rb')
+                pdfFile                         = File(f)
+                response                        = HttpResponse(pdfFile.read(), content_type='application/pdf')
+                response['Content-Disposition'] = f'filename={filename}.pdf'
+                return response
+            else:
+                return Response(status=status.HTTP_404_NOT_FOUND, data=f"No item put to purchase list")
         else:
             return Response(status=status.HTTP_404_NOT_FOUND, data=f"No invoice found for customer {customer.name}")
 
@@ -64,6 +70,9 @@ class CustomerPurchase(APIView):
                     item = Item.objects.get(id=entry["item"])
                 else:
                     return Response(status=status.HTTP_404_NOT_FOUND, data=f"No item found for id {entry['item']}")
+
+                if InvoiceItem.objects.filter(item__id=entry["item"], invoice=invoice).exists():
+                    return Response(status=status.HTTP_403_FORBIDDEN, data=f"Item with id {entry['item']} already present in list. Use PUT method to update.")
 
                 InvoiceItem.objects.create(
                     invoice     = invoice,

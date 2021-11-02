@@ -1,0 +1,72 @@
+<html>
+  <head>
+    <meta charset="utf-8">
+    <link href="./template/invoice.css" media="print" rel="stylesheet">
+    <title>Invoice</title>
+    <meta name="description" content="Invoice demo sample">
+  </head>
+
+  <body>
+    <h1>Invoice</h1>
+
+    <aside>
+      <address id="from">
+        Customer Name: {{ customer["name"] }}
+        {{ customer["phone"] }}
+        {{ customer["address"] }}
+      </address>
+
+      <address id="to">
+        Virtual Company Ltd.
+        +91-XXXX-XX-XXXX
+        abc@xompany.com
+        23th Street, Zbcxyz
+      </address>
+    </aside>
+
+    <dl id="informations">
+      <dt>INVOICE</dt>
+      <dd>{{ invoice }}</dd>
+      <dt>Date</dt>
+      <dd>{{ date }}</dd>
+    </dl>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Description</th>
+          <th>Price per Unit</th>
+          <th>Quantity</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in items %}        
+            <tr>  
+                <td>{{ item[0] }}</td>
+                <td>₹ {{ item[1] }}</td>
+                <td>{{ item[2] }}</td>
+                <td>₹ {{ item[3] }}</td>
+            </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <table id="total">
+      <thead>
+        <tr>
+          <th>Due by</th>
+          <th>Account number</th>
+          <th>Total due</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>DD/MM/YYYY</td>
+          <td>xxx xxx xxx xxx</td>
+          <td>₹ {{ total }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </body>
+</html>

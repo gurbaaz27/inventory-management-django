@@ -5,7 +5,6 @@
 - [Setup](#setup)
 - [Urls](#urls)
 - [Models](#models)
-- [Views](#views)
 - [Assumptions](#assumptions)
 
 ## setup
@@ -51,14 +50,29 @@ python manage.py runserver
 
 ## urls
 
+- GET: get the list of available items with details such as (name, price, description).
+```
+http://127.0.0.1:8000/api/items
+```
+
+- POST: to send the list of items to buy with corresponding quantities.
+- PUT: to update the list of items in the purchase list.
+- GET: get the invoice for the purchase in pdf format as per the above format but with all the necessary details filled dynamically
+
+```
+http://127.0.0.1:8000/api/customer-purchase/<customer-id>
+```
+
 
 ## models
 
-
-## views
+- Customer (Name, Phone No., Address)
+- Item (Description, Price)
+- Invoice (Customer, Timestamp)
+- InvoiceItems (Invoice, Item, Quantity)
 
 
 ## assumptions
 
-- `PUT`
+- `PUT` method created request for new items and/or update requests of previous items. Items not included in a PUT request, if they exist in Invoice earlier, do not get deleted. 
 
