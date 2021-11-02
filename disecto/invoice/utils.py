@@ -5,6 +5,10 @@ from datetime import datetime
 from pathlib import Path
 
 
+def construct_filename(customer_name, date_time):
+    return f"{customer_name.strip().replace(' ','-')}-{date_time.strftime('%Y-%m-%d--%H-%M-%S')}"
+
+
 def makepdf(html):
     """Generate a PDF file from a string of HTML."""
     htmldoc = HTML(string=html, base_url="")

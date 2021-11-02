@@ -9,7 +9,7 @@ from disecto.settings import MEDIA_ROOT
 from django.http import HttpResponse, Http404
 from .models import *
 from .serializers import *
-from .utils import create_invoice_pdf
+from .utils import create_invoice_pdf, construct_filename
 
 
 class ItemDetails(APIView):
@@ -68,7 +68,7 @@ class CustomerPurchase(APIView):
             if InvoiceItem.objects.filter(invoice=invoice).exists():
                 invoice_items                   = InvoiceItemsSerializer(InvoiceItem.objects.filter(invoice=invoice), many=True)
                 invoice_info                    = InvoiceSerializer(invoice)
-                filename                        = f"{customer.name}-{invoice.timestamp}"
+                filename                        = construct_filename(invoice.customer.name, invoice.timestamp)
                 path_to_file                    = MEDIA_ROOT + '/' + filename
                 create_invoice_pdf(path_to_file, invoice_info.data, invoice_items.data)
                 f                               = open(path_to_file + '.pdf', 'rb')
