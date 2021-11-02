@@ -6,6 +6,7 @@
 - [Urls](#urls)
 - [Models](#models)
 - [Views](#views)
+- [Assumptions](#assumptions)
 
 ## setup
 
@@ -29,6 +30,25 @@ conda activate venv
 pip install -r requirement.txt
 ```
 
+- setup your models and database
+
+```
+python manage.py makemigrations
+python manage.py migrate
+```
+
+- to explore admin dashboard, create a superuser
+
+```
+python manage.py createsuperuser
+```
+
+- fire up your server 
+
+```
+python manage.py runserver
+```
+
 ## urls
 
 
@@ -36,4 +56,9 @@ pip install -r requirement.txt
 
 
 ## views
+
+
+## assumptions
+
+- `PUT`
 
