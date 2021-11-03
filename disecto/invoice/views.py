@@ -3,7 +3,7 @@ from django.shortcuts import render
 # Create your views here.
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from rest_framework import serializers, status
+from rest_framework import status
 from django.core.files import File
 from disecto.settings import MEDIA_ROOT
 from django.http import HttpResponse, Http404
@@ -79,7 +79,7 @@ class CustomerPurchase(APIView):
             else:
                 return Response(status=status.HTTP_404_NOT_FOUND, data=f"No item put to purchase list")
         else:
-            return Response(status=status.HTTP_404_NOT_FOUND, data=f"No invoice found for customer {customer.name}")
+            return Response(status=status.HTTP_404_NOT_FOUND, data=f"No invoice found for customer {customer.name}. Create one using POST method.")
 
 
     def post(self, request, id, *args, **kwargs):
@@ -128,7 +128,7 @@ class CustomerPurchase(APIView):
             if Invoice.objects.filter(customer=customer).exists():
                 invoice = Invoice.objects.get(customer=customer)
             else:
-                invoice = Invoice.objects.create(customer=customer)
+                return Response(status=status.HTTP_404_NOT_FOUND, data=f"No invoice found for customer {customer.name}. Create one using POST method.")
             
             for entry in serializer.data:
                 if not Item.objects.filter(id=entry["item"]).exists():
@@ -160,3 +160,16 @@ class CustomerPurchase(APIView):
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data = serializer.errors)
 
+
+class LowStockItemsList(APIView):
+    """
+    Retrieve low stock items list
+    """
+    def get(self, request, *args, **kwargs):
+        filename                        = "stocklist.txt"
+        path_to_file                    = MEDIA_ROOT + '/' + filename
+        f                               = open(path_to_file, 'rb')
+        textfile                        = File(f)
+        response                        = HttpResponse(textfile.read(), content_type='text/plain')
+        response['Content-Disposition'] = f'filename={filename}'
+        return response

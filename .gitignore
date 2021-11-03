@@ -10,3 +10,4 @@ venv/
 
 third_party/
 
+.env
