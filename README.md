@@ -70,6 +70,7 @@ http://127.0.0.1:8000/api/items
 
 ```
 http://127.0.0.1:8000/api/customer-purchase/<int:customer-id>
+```
 
 - GET : returns txt file containing item list of low stock
 ```
