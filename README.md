@@ -30,11 +30,12 @@ conda activate venv
 pip install -r requirement.txt
 ```
 
-- setup your models and database
+- setup your models and database, collect static(optional)
 
 ```
 python manage.py makemigrations
 python manage.py migrate
+python manage.py collectstatic
 ```
 
 - to explore admin dashboard, create a superuser
@@ -43,7 +44,7 @@ python manage.py migrate
 python manage.py createsuperuser
 ```
 
-- fire up your server 
+- fire up your server and head over to <http://127.0.0.1:8000>
 
 ```
 python manage.py runserver
