@@ -135,26 +135,35 @@ class CustomerPurchase(APIView):
                     return Response(status=status.HTTP_404_NOT_FOUND, data=f"No item found for id {entry['item']}")
             
             for entry in serializer.data:
-                item = Item.objects.get(id=entry["item"])                
+                item = Item.objects.get(id=entry["item"])
 
-                if entry["quantity"] > item.quantity:
-                    return Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY, data=f"Item with id {item.id} has insufficient stocks ({item.quantity})")
+                if InvoiceItem.objects.filter(item__id=entry["item"], invoice=invoice).exists():
+                    invoice_item            = InvoiceItem.objects.filter(item__id=entry["item"], invoice=invoice)[0]
+                    requested_quantity      = entry["quantity"] - invoice_item.quantity
+
+                    if requested_quantity > item.quantity:
+                        return Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY, data=f"Item with id {item.id} has insufficient stocks ({item.quantity})")
+                else:
+                    if entry["quantity"] > item.quantity:
+                        return Response(status=status.HTTP_422_UNPROCESSABLE_ENTITY, data=f"Item with id {item.id} has insufficient stocks ({item.quantity})")
 
             for entry in serializer.data:
                 item = Item.objects.get(id=entry["item"])
                 if InvoiceItem.objects.filter(item__id=entry["item"], invoice=invoice).exists():
                     invoice_item            = InvoiceItem.objects.filter(item__id=entry["item"], invoice=invoice)[0]
+                    requested_quantity      = entry["quantity"] - invoice_item.quantity
                     invoice_item.quantity   = entry["quantity"]
                     invoice_item.save()
-                    item = Item.objects.get(id=entry["item"])       
+                    item.quantity -= requested_quantity
+                    item.save()      
                 else:
                     InvoiceItem.objects.create(
                         invoice     = invoice,
                         item        = item,
                         quantity    = entry["quantity"]
                     )   
-                item.quantity -= entry["quantity"]
-                item.save()
+                    item.quantity -= entry["quantity"]
+                    item.save()
 
             return Response(status=status.HTTP_200_OK, data="List of items updated in purchase list successfully!")
         else:
