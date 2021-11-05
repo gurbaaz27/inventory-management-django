@@ -117,7 +117,7 @@ below command can be scheduled via `cron` command-line utility to schedule job f
 python manage.py generate_stock_list
 ```
 
-the cronfile which has been scheduled in `pythonanywhere` cloud is `stocklist.cron`
+the equivalent cronfile which has been scheduled in `pythonanywhere` cloud is in `stocklist.cron`
 
 ```
 00 00 * * * /home/gurbaaz/.virtualenvs/mysite-virtualenv/bin/python /home/gurbaaz/disecto-backdev-task/disecto/manage.py generate_stock_list
