@@ -62,12 +62,12 @@ python manage.py runserver
 
 (apis can be tested on cloud simply by replacing <https://127.0.0.1:8000> with <https://gurbaaz.pythonanywhere.com>)
 
-- GET: get the list of available items with details such as (unique item id, name, price, description).
-It also supports POST method, in case one wants to add a new item in inventory. 
+1.  
 ```
 http://127.0.0.1:8000/api/items/
 ```
-A json example for post method is as follows
+GET: get the list of available items with details such as (unique item id, name, price, description).
+It also supports POST method, in case one wants to add a new item in inventory. A json example for post method is as follows
 ```json
 {
     "description": "xyz",
@@ -76,12 +76,12 @@ A json example for post method is as follows
 }
 ```
 
-- GET: get the list of customers with details such as (unique customer id, name, phone no, address).
-It also supports POST method, in case one wants to add a new customer.
+2.
 ```
 http://127.0.0.1:8000/api/customers/
 ```
-A json example for post method is as follows
+GET: get the list of customers with details such as (unique customer id, name, phone no, address).
+It also supports POST method, in case one wants to add a new customer. A json example for post method is as follows
 ```json
 {
     "name": "xyz",
@@ -90,18 +90,17 @@ A json example for post method is as follows
 }
 ```
 
-
-- POST: to send the list of items to buy with corresponding quantities.
-
-- PUT: to update the list of items in the purchase list.
-
-- GET: get the invoice for the purchase in pdf format as per the above format but with all the necessary details filled dynamically
-
+3.
 ```
 # note that these methods need a customer id, which can be retreived from GET /api/customers/ mentioned above
 http://127.0.0.1:8000/api/customer-purchase/<int:customer-id>
 ```
 
+- GET: get the invoice for the purchase in pdf format as per the above format but with all the necessary details filled dynamically
+- POST: to send the list of items to buy with corresponding quantities.
+- PUT: to update the list of items in the purchase list.
+
+A json example for post/put method is as follows (these requests need the item id in "item" field, which can be seen from GET /api/items/ mentioned above)
 ```json
 [
   {
@@ -114,13 +113,12 @@ http://127.0.0.1:8000/api/customer-purchase/<int:customer-id>
   }
 ]
 ```
-these requests need the item id in "item" field, which can be seen from GET /api/items/ mentioned above
 
-- GET : returns txt file containing item list of low stock
+4.
 ```
 http://127.0.0.1:8000/api/low-stock-items/
 ```
-
+GET : returns txt file containing item list of low stock
 
 ## models
 

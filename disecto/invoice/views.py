@@ -14,7 +14,7 @@ from .utils import create_invoice_pdf, construct_filename
 
 class ItemDetails(APIView):
     """
-    Retrieve items
+    Retrieve or create items
     """
     def get(self, request, *args, **kwargs):
         items = Item.objects.all()
@@ -33,7 +33,7 @@ class ItemDetails(APIView):
 
 class CustomerDetails(APIView):
     """
-    Retrieve customers
+    Retrieve or create customers
     """
     def get(self, request, *args, **kwargs):
         customers = Customer.objects.all()
