@@ -1,1 +1,1 @@
-00 00 * * * /home/gurbaaz/.virtualenvs/mysite-virtualenv/bin/python /home/gurbaaz/disecto-backdev-task/disecto/manage.py generate_stock_list
+01 00 * * * /home/gurbaaz/.virtualenvs/mysite-virtualenv/bin/python /home/gurbaaz/disecto-backdev-task/disecto/manage.py generate_stock_list
