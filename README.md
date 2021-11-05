@@ -62,7 +62,7 @@ python manage.py runserver
 
 (apis can be tested on cloud simply by replacing <https://127.0.0.1:8000> with <https://gurbaaz.pythonanywhere.com>)
 
-1.  
+**1.**
 ```
 http://127.0.0.1:8000/api/items/
 ```
@@ -76,7 +76,7 @@ It also supports POST method, in case one wants to add a new item in inventory. 
 }
 ```
 
-2.
+**2.**
 ```
 http://127.0.0.1:8000/api/customers/
 ```
@@ -90,7 +90,7 @@ It also supports POST method, in case one wants to add a new customer. A json ex
 }
 ```
 
-3.
+**3.**
 ```
 # note that these methods need a customer id, which can be retreived from GET /api/customers/ mentioned above
 http://127.0.0.1:8000/api/customer-purchase/<int:customer-id>
@@ -114,7 +114,7 @@ A json example for post/put method is as follows (these requests need the item i
 ]
 ```
 
-4.
+**4.**
 ```
 http://127.0.0.1:8000/api/low-stock-items/
 ```
