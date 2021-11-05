@@ -162,6 +162,8 @@ it generates `stocklist.txt` which can be accessed via GET method on following a
 http://127.0.0.1:8000/api/low-stock-items/
 ```
 
+![](assets/scheduling.png)
+
 ## hosting
 
 the server has been hosted on [gurbaaz.pythonanywhere.com](https://gurbaaz.pythonanywhere.com)
