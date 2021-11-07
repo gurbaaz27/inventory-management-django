@@ -17,9 +17,9 @@ from django.contrib import admin
 from django.urls import path
 from django.urls.conf import include
 from django.conf.urls.static import static
-from disecto.settings import STATIC_URL, STATIC_URL
+from disecto.settings import STATIC_URL, STATIC_ROOT
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/', include('invoice.urls')),
-] + static(STATIC_URL, document_root=STATIC_URL)
+] + static(STATIC_URL, document_root=STATIC_ROOT)
